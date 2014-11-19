@@ -32,9 +32,14 @@ public class RunHandler implements HttpHandler {
 				jt.setRemoteCommand(temp);
 				id = session.runJob(jt);
 				session.deleteJobTemplate(jt);
-				session.exit();
 			} catch (DrmaaException e) {
-				System.out.println("Error: " + e.getMessage());
+				System.out.println("RunError: " + e.getMessage());
+			} finally {
+				try {
+					session.exit();
+				} catch (DrmaaException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 		httpExchange.sendResponseHeaders(HttpURLConnection.HTTP_OK,

@@ -63,9 +63,20 @@ public class InfoHandler implements HttpHandler {
 					info = "Job finished, but failed\n";
 					break;
 				} /* switch */
-				session.exit();
 			} catch (DrmaaException e) {
-				info = "Error: " + e.getMessage();
+				String err = e.getMessage();
+				if ("The job specified by the 'jobid' does not exist."
+						.equals(err)) {
+					info = "DONE";
+				} else {
+					info = "InfoError: " + e.getMessage();
+				}
+			} finally {
+				try {
+					session.exit();
+				} catch (DrmaaException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 		httpExchange.sendResponseHeaders(HttpURLConnection.HTTP_OK,
