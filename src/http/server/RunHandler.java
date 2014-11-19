@@ -15,7 +15,7 @@ import org.ggf.drmaa.SessionFactory;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
-public class AppHandler implements HttpHandler {
+public class RunHandler implements HttpHandler {
 	// Http请求处理类
 	@Override
 	public void handle(HttpExchange httpExchange) throws IOException {
