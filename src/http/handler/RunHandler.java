@@ -1,4 +1,7 @@
-package http.server;
+package http.handler;
+
+import http.util.FileUtil;
+import http.util.PropertiesUtil;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -22,14 +25,24 @@ public class RunHandler implements HttpHandler {
 		String id = null; // 响应信息
 		InputStream in = httpExchange.getRequestBody(); // 获得输入流
 		BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-		String temp = null;
-		while ((temp = reader.readLine()) != null) {
+		String command = null;
+		while ((command = reader.readLine()) != null) {
+			System.out.println("command:" + command);
+			String datakey = "sh"
+					+ command.substring(command.lastIndexOf("/") + 1,
+					command.length());
+			String f = PropertiesUtil.sh_path + datakey + ".sh";
+			FileUtil.createFile(f);
+			FileUtil.appendWrite(f, "mkdir " + PropertiesUtil.result_path
+					+ datakey
+					+ "\n" + command + "\n");
+			Runtime.getRuntime().exec("chmod 755 " + f);
 			SessionFactory factory = SessionFactory.getFactory();
 			Session session = factory.getSession();
 			try {
 				session.init("");
 				JobTemplate jt = session.createJobTemplate();
-				jt.setRemoteCommand(temp);
+				jt.setRemoteCommand(f);
 				id = session.runJob(jt);
 				session.deleteJobTemplate(jt);
 			} catch (DrmaaException e) {

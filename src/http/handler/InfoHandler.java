@@ -1,4 +1,4 @@
-package http.server;
+package http.handler;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -33,7 +33,7 @@ public class InfoHandler implements HttpHandler {
 					info = "Job status cannot be determined\n";
 					break;
 				case Session.QUEUED_ACTIVE:
-					info = "Job is queued and active\n";
+					info = "job id=" + id + " is queuing\n";
 					break;
 				case Session.SYSTEM_ON_HOLD:
 					info = "Job is queued and in system hold\n";
@@ -45,7 +45,7 @@ public class InfoHandler implements HttpHandler {
 					info = "Job is queued and in user and system hold\n";
 					break;
 				case Session.RUNNING:
-					info = "Job is running\n";
+					info = "job id=" + id + " is running\n";
 					break;
 				case Session.SYSTEM_SUSPENDED:
 					info = "Job is system suspended\n";
@@ -63,6 +63,35 @@ public class InfoHandler implements HttpHandler {
 					info = "Job finished, but failed\n";
 					break;
 				} /* switch */
+				// JobInfo jinfo = session.wait(id,
+				// Session.TIMEOUT_WAIT_FOREVER);
+				// if (jinfo.wasAborted()) {
+				// System.out
+				// .println("Job " + jinfo.getJobId() + " never ran");
+				// } else if (jinfo.hasExited()) {
+				// System.out.println("Job " + jinfo.getJobId()
+				// + " finished regularly with exit status "
+				// + jinfo.getExitStatus());
+				// } else if (jinfo.hasSignaled()) {
+				// System.out.println("Job " + jinfo.getJobId()
+				// + " finished due to signal "
+				// + jinfo.getTerminatingSignal());
+				// } else {
+				// System.out.println("Job " + jinfo.getJobId()
+				// + " finished with unclear conditions");
+				// }
+				// System.out.println("Job Usage:");
+				//
+				// @SuppressWarnings("rawtypes")
+				// Map rmap = jinfo.getResourceUsage();
+				// @SuppressWarnings("rawtypes")
+				// Iterator i = rmap.keySet().iterator();
+				// while (i.hasNext()) {
+				// String name = (String) i.next();
+				// String value = (String) rmap.get(name);
+				//
+				// System.out.println("  " + name + "=" + value);
+				// }
 			} catch (DrmaaException e) {
 				String err = e.getMessage();
 				if ("The job specified by the 'jobid' does not exist."
