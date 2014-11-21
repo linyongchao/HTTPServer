@@ -14,7 +14,12 @@ import org.ggf.drmaa.SessionFactory;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 
-public class InfoHandler implements HttpHandler {
+/**
+ * @Description:获取运行状态
+ * @author lin
+ * @date 2014-11-21 下午12:59:39
+ */
+public class StatusHandler implements HttpHandler {
 	// Http请求处理类
 	@Override
 	public void handle(HttpExchange httpExchange) throws IOException {
@@ -62,36 +67,7 @@ public class InfoHandler implements HttpHandler {
 				case Session.FAILED:
 					info = "Job finished, but failed\n";
 					break;
-				} /* switch */
-				// JobInfo jinfo = session.wait(id,
-				// Session.TIMEOUT_WAIT_FOREVER);
-				// if (jinfo.wasAborted()) {
-				// System.out
-				// .println("Job " + jinfo.getJobId() + " never ran");
-				// } else if (jinfo.hasExited()) {
-				// System.out.println("Job " + jinfo.getJobId()
-				// + " finished regularly with exit status "
-				// + jinfo.getExitStatus());
-				// } else if (jinfo.hasSignaled()) {
-				// System.out.println("Job " + jinfo.getJobId()
-				// + " finished due to signal "
-				// + jinfo.getTerminatingSignal());
-				// } else {
-				// System.out.println("Job " + jinfo.getJobId()
-				// + " finished with unclear conditions");
-				// }
-				// System.out.println("Job Usage:");
-				//
-				// @SuppressWarnings("rawtypes")
-				// Map rmap = jinfo.getResourceUsage();
-				// @SuppressWarnings("rawtypes")
-				// Iterator i = rmap.keySet().iterator();
-				// while (i.hasNext()) {
-				// String name = (String) i.next();
-				// String value = (String) rmap.get(name);
-				//
-				// System.out.println("  " + name + "=" + value);
-				// }
+				}
 			} catch (DrmaaException e) {
 				String err = e.getMessage();
 				if ("The job specified by the 'jobid' does not exist."
@@ -108,6 +84,7 @@ public class InfoHandler implements HttpHandler {
 				}
 			}
 		}
+
 		httpExchange.sendResponseHeaders(HttpURLConnection.HTTP_OK,
 				info.getBytes().length); // 设置响应头属性及响应信息的长度
 		OutputStream out = httpExchange.getResponseBody(); // 获得输出流

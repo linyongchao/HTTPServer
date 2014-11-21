@@ -1,7 +1,8 @@
 package http.server;
 
-import http.handler.InfoHandler;
+import http.handler.ResourcesHandler;
 import http.handler.RunHandler;
+import http.handler.StatusHandler;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -21,18 +22,29 @@ public class AppServer {
 		System.out.println("runService started");
 	}
 
-	public static void infoService() throws IOException {
+	public static void statusService() throws IOException {
+		HttpServerProvider provider = HttpServerProvider.provider();
+		HttpServer httpserver = provider.createHttpServer(
+				new InetSocketAddress(7777), 100);
+		httpserver.createContext("/status", new StatusHandler());
+		httpserver.setExecutor(null);
+		httpserver.start();
+		System.out.println("statusService started");
+	}
+
+	public static void resService() throws IOException {
 		HttpServerProvider provider = HttpServerProvider.provider();
 		HttpServer httpserver = provider.createHttpServer(
 				new InetSocketAddress(8888), 100);
-		httpserver.createContext("/info", new InfoHandler());
+		httpserver.createContext("/res", new ResourcesHandler());
 		httpserver.setExecutor(null);
 		httpserver.start();
-		System.out.println("infoService started");
+		System.out.println("resService started");
 	}
 
 	public static void main(String[] args) throws IOException {
 		runService();
-		infoService();
+		statusService();
+		resService();
 	}
 }
